@@ -1,6 +1,6 @@
 # RunReady
 
-**RunReady** is a World of Warcraft Classic addon designed to bring modern convenience to classic dungeon running. It serves as a seamlessly integrated, natively-styled dungeon companion that helps you track quests, manage party syncs, and verify key attunements before you step foot in the instance.
+**RunReady** is a World of Warcraft Forever addon designed to bring modern convenience to classic dungeon running. It serves as a seamlessly integrated, natively-styled dungeon companion that helps you track quests, manage party syncs, and verify key attunements before you step foot in the instance.
 
 ![RunReady Showcase](https://via.placeholder.com/800x400.png?text=RunReady+UI)
 
