@@ -96,8 +96,9 @@ function RR.QuestScanner:AuditDungeon(dungeonKey)
         missingExternalPickups = {},
     }
 
-    for _, q in ipairs(dungeon.quests or {}) do
-        -- Check faction filter
+    if not dungeon.chains then
+        for _, q in ipairs(dungeon.quests or {}) do
+            -- Check faction filter
         if q.faction == "Both" or q.faction == playerFaction then
             -- Check class filter (if any)
             local classMatch = true
@@ -181,6 +182,7 @@ function RR.QuestScanner:AuditDungeon(dungeonKey)
 
                 table.insert(results.quests, questEntry)
             end
+        end
         end
     end
 
@@ -272,6 +274,36 @@ function RR.QuestScanner:AuditDungeon(dungeonKey)
                 end
 
                 table.insert(results.chains, auditedChain)
+                
+                -- Extract active step into results.quests for UI
+                local activeStep = auditedChain.steps[#auditedChain.steps]
+                for _, s in ipairs(auditedChain.steps) do
+                    if s.status ~= "COMPLETED" then
+                        activeStep = s
+                        break
+                    end
+                end
+                
+                if activeStep then
+                    table.insert(results.quests, {
+                        data = activeStep.data,
+                        status = activeStep.status,
+                        statusNote = activeStep.statusNote,
+                        isPushable = activeStep.isPushable,
+                        logIndex = activeStep.logIndex,
+                        isChain = true,
+                        chainName = auditedChain.name,
+                        chainStep = activeStep.stepNumber,
+                        chainTotal = auditedChain.totalSteps
+                    })
+                    results.totalCount = results.totalCount + 1
+                    if activeStep.status == "COMPLETED" then results.completedCount = results.completedCount + 1
+                    elseif activeStep.status == "READY_TURNIN" then results.readyTurninCount = results.readyTurninCount + 1
+                    elseif activeStep.status == "ACTIVE" then results.activeCount = results.activeCount + 1
+                    elseif activeStep.status == "AVAILABLE" then results.availableCount = results.availableCount + 1
+                    elseif activeStep.status == "LOCKED" then results.lockedCount = results.lockedCount + 1 end
+                end
+                
                 end
             end
         end
