@@ -2046,12 +2046,12 @@ RR.Dungeons_1_30 = {
                 },
             },
             {
-                name = 'Trouble in the Deeps (Horde)',
+                name = "The Essence of Aku'Mai (Horde)",
                 faction = "Horde",
                 steps = {
                     {
                         step = 1,
-                        phase = 'IN-DUNGEON',
+                        phase = 'PRE-DUNGEON',
                         questID = 6562,
                         title = 'Trouble in the Deeps',
                         pickupNPC = 'Tsunaman, Stonetalon Mountains',
@@ -2061,16 +2061,10 @@ RR.Dungeons_1_30 = {
                         action = "Speak to Je'neu Sancrea in Ashenvale.",
                         turninNPC = "Je'neu Sancrea, Zoram'gar Outpost, Ashenvale",
                         turninLocation = 'Ashenvale',
-                        note = 'Inside instance objective',
+                        note = 'Breadcrumb quest',
                     },
-                },
-            },
-            {
-                name = "The Essence of Aku'Mai (Horde)",
-                faction = "Horde",
-                steps = {
                     {
-                        step = 1,
+                        step = 2,
                         phase = 'IN-DUNGEON',
                         questID = 6563,
                         title = "The Essence of Aku'Mai",
