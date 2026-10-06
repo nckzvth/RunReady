@@ -4,7 +4,7 @@ RR.MinimapButton = CreateFrame("Button", "RunReadyMinimapButton", Minimap)
 local Btn = RR.MinimapButton
 
 function Btn:Initialize()
-    self:SetSize(31, 31)
+    self:SetSize(32, 32)
     self:SetFrameStrata("MEDIUM")
     self:SetFrameLevel(8)
     self:EnableMouse(true)
@@ -12,14 +12,14 @@ function Btn:Initialize()
 
     -- Native circular border
     self.border = self:CreateTexture(nil, "OVERLAY")
-    self.border:SetSize(52, 52)
+    self.border:SetSize(54, 54)
     self.border:SetPoint("TOPLEFT")
     self.border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
 
     -- Icon (Dungeon portal icon)
     self.icon = self:CreateTexture(nil, "BACKGROUND")
-    self.icon:SetSize(20, 20)
-    self.icon:SetPoint("CENTER", 0, 1)
+    self.icon:SetSize(21, 21)
+    self.icon:SetPoint("TOPLEFT", 7, -6)
     self.icon:SetTexture("Interface\\AddOns\\RunReady\\UI\\MinimapIcon.tga")
 
     self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
