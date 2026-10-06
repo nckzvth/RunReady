@@ -4,6 +4,8 @@
 
 ![RunReady Showcase](https://via.placeholder.com/800x400.png?text=RunReady+UI)
 
+![RunReady Logo](RunReady_Logo.jpg)
+
 ## Features
 
 * **Interactive Quest Tracker**: Automatically scans your quest log against all available quests for your selected dungeon. Displays exactly what you have, what you're missing, and what you've already completed.
