@@ -3,6 +3,7 @@
 ## Notes: Visual dungeon quest tracker, readiness auditor, and party sync for Classic and WoW Forever.
 ## Author: Antigravity Team
 ## Version: 1.0.0
+## X-Curse-Project-ID: 1729452
 ## SavedVariables: RunReadyDB
 ## SavedVariablesPerCharacter: RunReadyCharDB
 ## OptionalDeps: TomTom
