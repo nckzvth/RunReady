@@ -20,7 +20,7 @@ function Btn:Initialize()
     self.icon = self:CreateTexture(nil, "BACKGROUND")
     self.icon:SetSize(18, 18)
     self.icon:SetPoint("CENTER", 0, 1)
-    self.icon:SetTexture("Interface\\Icons\\INV_Scroll_03")
+    self.icon:SetTexture("Interface\\AddOns\\RunReady\\UI\\MinimapIcon.tga")
 
     self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
     self:RegisterForDrag("LeftButton")
