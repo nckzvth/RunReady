@@ -350,7 +350,8 @@ function Frame:Initialize()
     self.collectQuestsBtn = CreateFrame("Button", nil, self.showcase, "UIPanelButtonTemplate")
     self.collectQuestsBtn:SetSize(110, 22)
     self.collectQuestsBtn:SetPoint("RIGHT", self.pinEntranceBtn, "LEFT", -4, 0)
-    self.collectQuestsBtn:SetText("GPS Tour")`r`n    self.collectQuestsBtn:Hide() -- Disabled for now
+    self.collectQuestsBtn:SetText("GPS Tour")
+    self.collectQuestsBtn:Hide() -- Disabled for now
     self.collectQuestsBtn:SetScript("OnClick", function()
         local dID = RR.charDB.selectedDungeon
         local d = RR:GetDungeon(dID)
