@@ -1,0 +1,17 @@
+﻿# WoW Addon specific
+.DS_Store
+*.bak
+*.old
+*.txt
+!Readme.txt
+*.zip
+*.rar
+*.7z
+
+# VS Code / IDE
+.vscode/
+.idea/
+
+# Luacheck
+.luacheckrc
+luac.out

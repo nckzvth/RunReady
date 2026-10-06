@@ -1,0 +1,24 @@
+## Interface: 16001, 16000, 16002, 11509
+## Title: |cffffd100Dungeon|r|cffffffffPrep|r
+## Notes: 5-Man Dungeon Readiness, Pre-Flight Quest Audit, 1-Click Party Sharing, and In-Dungeon Item Alerts.
+## Author: Antigravity Team
+## Version: 1.0.0
+## SavedVariables: DungeonPrepDB
+## SavedVariablesPerCharacter: DungeonPrepCharDB
+## OptionalDeps: TomTom
+
+# Core Engine
+Core\Config.lua
+Core\Utils.lua
+Core\QuestScanner.lua
+Core\PartyComms.lua
+Core\ItemWatcher.lua
+
+# Dungeon & Quest Databases
+Data\Dungeons_1_30.lua
+Data\Dungeons_30_60.lua
+Data\Keys_Attunements.lua
+
+# User Interface
+UI\MainFrame.lua
+UI\MinimapButton.lua
