@@ -1,15 +1,15 @@
-local addonName, DP = ...
+local addonName, RR = ...
 
-DP.QuestScanner = {}
-DP.completedCache = {}
+RR.QuestScanner = {}
+RR.completedCache = {}
 
 -- Refresh completed quest cache
-function DP.QuestScanner:RefreshCompletedQuests()
+function RR.QuestScanner:RefreshCompletedQuests()
     if GetQuestsCompleted then
         local t = GetQuestsCompleted()
         if t and type(t) == "table" then
             for qid, v in pairs(t) do
-                if v then DP.completedCache[qid] = true end
+                if v then RR.completedCache[qid] = true end
             end
         end
     end
@@ -17,19 +17,19 @@ function DP.QuestScanner:RefreshCompletedQuests()
         local list = C_QuestLog.GetAllCompletedQuestIDs()
         if list and type(list) == "table" then
             for _, qid in ipairs(list) do
-                DP.completedCache[qid] = true
+                RR.completedCache[qid] = true
             end
         end
     end
 end
 
-function DP.QuestScanner:IsQuestCompleted(questID)
+function RR.QuestScanner:IsQuestCompleted(questID)
     if not questID then return false end
-    if DP.completedCache[questID] then return true end
+    if RR.completedCache[questID] then return true end
 
     if C_QuestLog and C_QuestLog.IsQuestFlaggedCompleted then
         if C_QuestLog.IsQuestFlaggedCompleted(questID) then
-            DP.completedCache[questID] = true
+            RR.completedCache[questID] = true
             return true
         end
     end
@@ -37,7 +37,7 @@ function DP.QuestScanner:IsQuestCompleted(questID)
 end
 
 -- Check active log status
-function DP.QuestScanner:GetQuestLogStatus(questID)
+function RR.QuestScanner:GetQuestLogStatus(questID)
     if not questID then return false, false, false end
 
     if C_QuestLog and C_QuestLog.GetNumQuestLogEntries then
@@ -75,13 +75,13 @@ function DP.QuestScanner:GetQuestLogStatus(questID)
 end
 
 -- Comprehensive Dungeon Audit
-function DP.QuestScanner:AuditDungeon(dungeonKey)
-    local dungeon = DP:GetDungeon(dungeonKey)
+function RR.QuestScanner:AuditDungeon(dungeonKey)
+    local dungeon = RR:GetDungeon(dungeonKey)
     if not dungeon then return nil end
 
     self:RefreshCompletedQuests()
     local playerLevel = UnitLevel("player")
-    local playerFaction = DP.Utils:GetPlayerFaction()
+    local playerFaction = RR.Utils:GetPlayerFaction()
 
     local results = {
         dungeon = dungeon,

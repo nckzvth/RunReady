@@ -1,22 +1,22 @@
-local _, DP = ...
-DP.Objectives = CreateFrame("Frame")
-DP.Objectives:RegisterEvent("NAME_PLATE_UNIT_ADDED")
-DP.Objectives:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
-DP.Objectives:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-DP.Objectives:RegisterEvent("PLAYER_ENTERING_WORLD")
+local _, RR = ...
+RR.Objectives = CreateFrame("Frame")
+RR.Objectives:RegisterEvent("NAME_PLATE_UNIT_ADDED")
+RR.Objectives:RegisterEvent("NAME_PLATE_UNIT_REMOVED")
+RR.Objectives:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+RR.Objectives:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 local dungeonObjectives = {}
 local dropBosses = {}
 local activeNameplates = {}
 
-function DP.Objectives:UpdateDungeonObjectives()
+function RR.Objectives:UpdateDungeonObjectives()
     wipe(dungeonObjectives)
     wipe(dropBosses)
     
-    local key = DP.charDB and DP.charDB.selectedDungeon
+    local key = RR.charDB and RR.charDB.selectedDungeon
     if not key then return end
     
-    local audit = DP.QuestScanner:AuditDungeon(key)
+    local audit = RR.QuestScanner:AuditDungeon(key)
     if not audit then return end
     
     for _, qEntry in ipairs(audit.quests) do
@@ -63,7 +63,7 @@ local function SetupNameplateIndicator(frame, unit)
     end
 end
 
-DP.Objectives:SetScript("OnEvent", function(self, event, ...)
+RR.Objectives:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" then
         self:UpdateDungeonObjectives()
     elseif event == "NAME_PLATE_UNIT_ADDED" then
@@ -85,7 +85,7 @@ DP.Objectives:SetScript("OnEvent", function(self, event, ...)
         if subevent == "UNIT_DIED" and destName then
             if dropBosses[destName] then
                 local info = dropBosses[destName]
-                RaidNotice_AddMessage(RaidWarningFrame, "⚠️ DON'T FORGET TO LOOT: " .. info.itemName .. " ⚠️", {r=0, g=1, b=1})
+                RaidNotice_AddMessage(RaidWarningFrame, "âš ï¸ DON'T FORGET TO LOOT: " .. info.itemName .. " âš ï¸", {r=0, g=1, b=1})
                 PlaySound(8959) -- RaidWarning sound
             end
         end
@@ -98,14 +98,14 @@ GameTooltip:HookScript("OnTooltipSetUnit", function(self)
     if not name then return end
     
     if dungeonObjectives[name] then
-        self:AddLine("|cff00e5ff[DungeonPrep]|r Objective: " .. dungeonObjectives[name])
+        self:AddLine("|cff00e5ff[RunReady]|r Objective: " .. dungeonObjectives[name])
         self:Show()
     end
 end)
 
 -- Make sure we update objectives when the UI selects a new dungeon
-if DP.MainFrame and DP.MainFrame.SelectDungeon then
-    hooksecurefunc(DP.MainFrame, "SelectDungeon", function(self, key)
-        DP.Objectives:UpdateDungeonObjectives()
+if RR.MainFrame and RR.MainFrame.SelectDungeon then
+    hooksecurefunc(RR.MainFrame, "SelectDungeon", function(self, key)
+        RR.Objectives:UpdateDungeonObjectives()
     end)
 end

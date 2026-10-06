@@ -1,7 +1,7 @@
-local addonName, DP = ...
+local addonName, RR = ...
 
-DP.MinimapButton = CreateFrame("Button", "DungeonPrepMinimapButton", Minimap)
-local Btn = DP.MinimapButton
+RR.MinimapButton = CreateFrame("Button", "RunReadyMinimapButton", Minimap)
+local Btn = RR.MinimapButton
 
 function Btn:Initialize()
     self:SetSize(31, 31)
@@ -39,27 +39,27 @@ function Btn:Initialize()
             local scale = UIParent:GetEffectiveScale()
             px, py = px / scale, py / scale
             local angle = math.deg(math.atan2(py - my, px - mx))
-            DP.db.minimapPos = angle
+            RR.db.minimapPos = angle
             s:UpdatePosition()
         end
     end)
 
     self:SetScript("OnClick", function(s, button)
         if button == "LeftButton" then
-            if DP.MainFrame:IsShown() then
-                DP.MainFrame:Hide()
+            if RR.MainFrame:IsShown() then
+                RR.MainFrame:Hide()
             else
-                DP.MainFrame:Show()
-                DP.MainFrame:Refresh()
+                RR.MainFrame:Show()
+                RR.MainFrame:Refresh()
             end
         elseif button == "RightButton" then
-            DP:ShareCurrentDungeonQuests()
+            RR:ShareCurrentDungeonQuests()
         end
     end)
 
     self:SetScript("OnEnter", function(s)
         GameTooltip:SetOwner(s, "ANCHOR_LEFT")
-        GameTooltip:AddLine(DP.title, 1, 0.82, 0)
+        GameTooltip:AddLine(RR.title, 1, 0.82, 0)
         GameTooltip:AddLine(" ")
         GameTooltip:AddLine("|cffffd100Left-Click:|r Open Dungeon Readiness Window", 0.8, 0.8, 0.8)
         GameTooltip:AddLine("|cffffd100Right-Click:|r 1-Click Share Dungeon Quests to Party", 0.8, 0.8, 0.8)
@@ -72,13 +72,13 @@ function Btn:Initialize()
 
     self:UpdatePosition()
 
-    if not DP.db.showMinimapButton then
+    if not RR.db.showMinimapButton then
         self:Hide()
     end
 end
 
 function Btn:UpdatePosition()
-    local angle = math.rad(DP.db.minimapPos or 215)
+    local angle = math.rad(RR.db.minimapPos or 215)
     local radius = (Minimap:GetWidth() / 2) + 5
     local x = math.cos(angle) * radius
     local y = math.sin(angle) * radius

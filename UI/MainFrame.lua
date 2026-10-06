@@ -1,7 +1,7 @@
-local addonName, DP = ...
+local addonName, RR = ...
 
-DP.MainFrame = CreateFrame("Frame", "DungeonPrepMainFrame", UIParent, "BackdropTemplate")
-local Frame = DP.MainFrame
+RR.MainFrame = CreateFrame("Frame", "RunReadyMainFrame", UIParent, "BackdropTemplate")
+local Frame = RR.MainFrame
 
 -- State
 Frame.activeScreen = "QUESTS"     -- "QUESTS", "PARTY", "KEYS"
@@ -10,7 +10,7 @@ Frame.activeBracket = "BETA"    -- "BETA", "LAUNCH", "ALL"
 Frame.linePool = {}
 Frame.activeLines = {}
 
-DP.DungeonIcons = {
+RR.DungeonIcons = {
     ["RFC"]         = "Interface\\Icons\\Spell_Fire_Fire",
     ["HOT"]         = "Interface\\Icons\\INV_Hammer_08",           -- Hall of Thanes (Forever)
     ["WC"]          = "Interface\\Icons\\Spell_Nature_HealingTouch",
@@ -156,7 +156,7 @@ function Frame:Initialize()
     self:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
     
     -- Make the frame closeable via the ESC key
-    tinsert(UISpecialFrames, "DungeonPrepMainFrame")
+    tinsert(UISpecialFrames, "RunReadyMainFrame")
 
     -- Classic Native WoW Frame Look (Dungeon Journal Style)
     self:SetBackdrop({
@@ -182,12 +182,12 @@ function Frame:Initialize()
     self.shareBtn:SetPoint("RIGHT", self.closeBtn, "LEFT", -12, 0)
     self.shareBtn:SetText("Share Quests")
     self.shareBtn:SetScript("OnClick", function()
-        DP:ShareCurrentDungeonQuests(DP.charDB.selectedDungeon)
+        RR:ShareCurrentDungeonQuests(RR.charDB.selectedDungeon)
     end)
 
     self.titleText = self:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     self.titleText:SetPoint("RIGHT", self.shareBtn, "LEFT", -16, 0)
-    self.titleText:SetText("|cff00e5ffDungeon|r|cffffffffPrep|r  |cff64748bv" .. (DP.version or "1.0.0") .. "|r")
+    self.titleText:SetText("|cff00e5ffDungeon|r|cffffffffPrep|r  |cff64748bv" .. (RR.version or "1.0.0") .. "|r")
 
     -- Screen Switcher Tabs will be attached to rightArea
 
@@ -340,9 +340,9 @@ function Frame:Initialize()
     self.pinEntranceBtn:SetPoint("RIGHT", -10, 0)
     self.pinEntranceBtn:SetText("Pin Entrance")
     self.pinEntranceBtn:SetScript("OnClick", function()
-        local d = DP:GetDungeon(DP.charDB.selectedDungeon)
+        local d = RR:GetDungeon(RR.charDB.selectedDungeon)
         if d and d.coords and d.mapID then
-            DP.Utils:SetWaypoint(d.mapID, d.coords[1], d.coords[2], d.name .. " Entrance")
+            RR.Utils:SetWaypoint(d.mapID, d.coords[1], d.coords[2], d.name .. " Entrance")
         end
     end)
 
@@ -352,11 +352,11 @@ function Frame:Initialize()
     self.collectQuestsBtn:SetPoint("RIGHT", self.pinEntranceBtn, "LEFT", -4, 0)
     self.collectQuestsBtn:SetText("GPS Tour")
     self.collectQuestsBtn:SetScript("OnClick", function()
-        local dID = DP.charDB.selectedDungeon
-        local d = DP:GetDungeon(dID)
+        local dID = RR.charDB.selectedDungeon
+        local d = RR:GetDungeon(dID)
         if not d then return end
         
-        local results = DP.QuestScanner:AuditDungeon(dID)
+        local results = RR.QuestScanner:AuditDungeon(dID)
         local count = 0
         if results and results.chains then
             for _, ch in ipairs(results.chains) do
@@ -367,9 +367,9 @@ function Frame:Initialize()
                         local coords = (status == "READY_TURNIN") and s.turninCoords or s.pickupCoords
                         if coords then
                             local locStr = (status == "READY_TURNIN") and (s.turninNPC or s.turninLocation) or (s.pickupNPC or s.pickupLocation)
-                            local mapID = s.pickupMapID or DP.Utils:GetMapIDFromZone(locStr) or DP.Utils:GetMapIDFromZone(s.pickupLocation) or d.mapID
+                            local mapID = s.pickupMapID or RR.Utils:GetMapIDFromZone(locStr) or RR.Utils:GetMapIDFromZone(s.pickupLocation) or d.mapID
                             if mapID then
-                                DP.Utils:SetWaypoint(mapID, coords[1], coords[2], s.title)
+                                RR.Utils:SetWaypoint(mapID, coords[1], coords[2], s.title)
                                 count = count + 1
                             end
                         end
@@ -379,12 +379,12 @@ function Frame:Initialize()
         end
         if count > 0 then
             if TomTom then
-                print("|cff00e5ffDungeonPrep:|r Added " .. count .. " waypoints to TomTom!")
+                print("|cff00e5ffRunReady:|r Added " .. count .. " waypoints to TomTom!")
             else
-                print("|cff00e5ffDungeonPrep:|r Without TomTom, WoW only allows 1 map pin at a time. Install TomTom for the full GPS Tour!")
+                print("|cff00e5ffRunReady:|r Without TomTom, WoW only allows 1 map pin at a time. Install TomTom for the full GPS Tour!")
             end
         else
-            print("|cff00e5ffDungeonPrep:|r No available quests found with coordinates.")
+            print("|cff00e5ffRunReady:|r No available quests found with coordinates.")
         end
     end)
 
@@ -452,12 +452,12 @@ function Frame:Refresh()
     self:SwitchScreen(self.activeScreen or "QUESTS")
     self:PopulateDungeonList(false)
 
-    local defaultDungeon = DP.charDB.selectedDungeon or "SFK"
+    local defaultDungeon = RR.charDB.selectedDungeon or "SFK"
     self:SelectDungeon(defaultDungeon)
 end
 
 function Frame:PopulateDungeonList(autoSelectFirst)
-    local fullList = DP:GetDungeonList()
+    local fullList = RR:GetDungeonList()
     local filtered = {}
 
     for _, d in ipairs(fullList) do
@@ -531,7 +531,7 @@ function Frame:PopulateDungeonList(autoSelectFirst)
                 s.overlay:SetColorTexture(0, 0, 0, 0.4)
             end)
             btn:SetScript("OnLeave", function(s)
-                if DP.charDB.selectedDungeon ~= s.dungeonKey then
+                if RR.charDB.selectedDungeon ~= s.dungeonKey then
                     s.overlay:SetColorTexture(0, 0, 0, 0.6)
                 else
                     s.overlay:SetColorTexture(0, 0, 0, 0.2)
@@ -547,17 +547,17 @@ function Frame:PopulateDungeonList(autoSelectFirst)
         btn:SetPoint("TOPLEFT", 0, -((i - 1) * (rowHeight + 4)))
         btn.dungeonKey = d.key
 
-        if d.key == DP.charDB.selectedDungeon then 
+        if d.key == RR.charDB.selectedDungeon then 
             hasCurrent = true 
             btn.overlay:SetColorTexture(0, 0, 0, 0.2)
         else
             btn.overlay:SetColorTexture(0, 0, 0, 0.6)
         end
 
-        local artPath = DP.DungeonArt[d.key]
+        local artPath = RR.DungeonArt[d.key]
         if artPath then
             btn.bg:SetTexture(artPath)
-            local c = DP.DungeonArtCoords[d.key]
+            local c = RR.DungeonArtCoords[d.key]
             if c then
                 btn.bg:SetTexCoord(c[1], c[2], c[3], c[4])
             else
@@ -578,7 +578,7 @@ function Frame:PopulateDungeonList(autoSelectFirst)
             btn.levelText:SetText(string.format("Level %d - %d", d.minLevel, d.maxLevel))
         end
 
-        local audit = DP.QuestScanner:AuditDungeon(d.key)
+        local audit = RR.QuestScanner:AuditDungeon(d.key)
         if audit then
             local readyTotal = audit.activeCount + audit.readyTurninCount + audit.completedCount
             if audit.totalCount > 0 and readyTotal == audit.totalCount then
@@ -592,7 +592,7 @@ function Frame:PopulateDungeonList(autoSelectFirst)
             btn.badge:SetText("")
         end
 
-        if d.key == DP.charDB.selectedDungeon then
+        if d.key == RR.charDB.selectedDungeon then
             btn:SetBackdropColor(0.06, 0.16, 0.24, 0.95)
             btn:SetBackdropBorderColor(0.0, 0.85, 0.95, 1.0)
             btn.accent:SetColorTexture(0.0, 0.85, 0.95, 1.0)
@@ -618,9 +618,9 @@ function Frame:PopulateDungeonList(autoSelectFirst)
 end
 
 function Frame:SelectDungeon(dungeonKey)
-    DP.charDB.selectedDungeon = dungeonKey
+    RR.charDB.selectedDungeon = dungeonKey
     self.selectedQuestID = nil
-    local audit = DP.QuestScanner:AuditDungeon(dungeonKey)
+    local audit = RR.QuestScanner:AuditDungeon(dungeonKey)
     if not audit then return end
 
     local d = audit.dungeon
@@ -881,7 +881,7 @@ end
 -- Explicit WHAT and WHEN with NO branch length normalization
 -- ====================================================
 function Frame:RenderFlowchart()
-    local audit = DP.QuestScanner:AuditDungeon(DP.charDB.selectedDungeon)
+    local audit = RR.QuestScanner:AuditDungeon(RR.charDB.selectedDungeon)
     if not audit then return end
 
     local d = audit.dungeon
@@ -949,7 +949,7 @@ function Frame:RenderFlowchart()
         if name == d.name or (d.instanceName and name == d.instanceName) then
             if locked then
                 isLocked = true
-                resetStr = DP.Utils:FormatResetTime(reset)
+                resetStr = RR.Utils:FormatResetTime(reset)
                 break
             end
         end
@@ -1045,7 +1045,7 @@ function Frame:RenderFlowchart()
         for sIdx, sEntry in ipairs(ch.steps) do
             local s = sEntry.data
             local status = sEntry.status
-            local stepMeta = DP.Utils:GetStatusMeta(status)
+            local stepMeta = RR.Utils:GetStatusMeta(status)
             
             local nodeX = startX
             local nodeY = currentY
@@ -1154,9 +1154,9 @@ function Frame:RenderFlowchart()
             node:SetScript("OnClick", function()
                 if coords then
                     local locStr = (status == "READY_TURNIN") and (s.turninNPC or s.turninLocation) or (s.pickupNPC or s.pickupLocation)
-                    local mapID = s.pickupMapID or DP.Utils:GetMapIDFromZone(locStr) or DP.Utils:GetMapIDFromZone(s.pickupLocation) or d.mapID
+                    local mapID = s.pickupMapID or RR.Utils:GetMapIDFromZone(locStr) or RR.Utils:GetMapIDFromZone(s.pickupLocation) or d.mapID
                     if mapID then
-                        DP.Utils:SetWaypoint(mapID, coords[1], coords[2], s.title)
+                        RR.Utils:SetWaypoint(mapID, coords[1], coords[2], s.title)
                     end
                 end
             end)
@@ -1201,7 +1201,7 @@ end
 -- SCREEN 2: ACTIVE QUEST GIVERS DIRECTORY
 -- ====================================================
 function Frame:RenderQuestOverview()
-    local audit = DP.QuestScanner:AuditDungeon(DP.charDB.selectedDungeon)
+    local audit = RR.QuestScanner:AuditDungeon(RR.charDB.selectedDungeon)
     if not audit then return end
 
     local d = audit.dungeon
@@ -1323,8 +1323,8 @@ function Frame:RenderQuestOverview()
             card.wptBtn:Show()
             card.wptBtn:SetScript("OnClick", function()
                 local npcName = q.pickupNPC or q.title
-                local mapID = DP.Utils:GetMapIDFromZone(npcName) or d.mapID
-                DP.Utils:SetWaypoint(mapID, q.pickupCoords[1], q.pickupCoords[2], q.title)
+                local mapID = RR.Utils:GetMapIDFromZone(npcName) or d.mapID
+                RR.Utils:SetWaypoint(mapID, q.pickupCoords[1], q.pickupCoords[2], q.title)
             end)
         else
             card.wptBtn:Hide()
@@ -1368,7 +1368,7 @@ end
 -- SCREEN 3: PARTY SYNC MATRIX (From Mockup)
 -- ====================================================
 function Frame:RenderChainDetail()
-    local audit = DP.QuestScanner:AuditDungeon(DP.charDB.selectedDungeon)
+    local audit = RR.QuestScanner:AuditDungeon(RR.charDB.selectedDungeon)
     if not audit then return end
 
     local targetChain = nil
@@ -1533,7 +1533,7 @@ function Frame:RenderChainDetail()
 end
 
 function Frame:RenderPartySync()
-    local audit = DP.QuestScanner:AuditDungeon(DP.charDB.selectedDungeon)
+    local audit = RR.QuestScanner:AuditDungeon(RR.charDB.selectedDungeon)
     if not audit then return end
 
     local d = audit.dungeon
@@ -1627,7 +1627,7 @@ function Frame:RenderPartySync()
             row.missingText:SetText("|cff94a3b8Awaiting Addon Sync|r")
             row.pushBtn:Show()
             row.pushBtn:SetScript("OnClick", function()
-                DP:ShareCurrentDungeonQuests(d.key)
+                RR:ShareCurrentDungeonQuests(d.key)
             end)
         end
 
@@ -1640,11 +1640,11 @@ end
 -- SCREEN 4: KEYS & DUNGEON LOCKS
 -- ====================================================
 function Frame:RenderKeys()
-    local audit = DP.QuestScanner:AuditDungeon(DP.charDB.selectedDungeon)
+    local audit = RR.QuestScanner:AuditDungeon(RR.charDB.selectedDungeon)
     local dName = audit and audit.dungeon.name or ""
 
     local keysList = {}
-    for itemID, info in pairs(DP.KeysData or {}) do
+    for itemID, info in pairs(RR.KeysData or {}) do
         local isMatch = dName:find(info.dungeon) or info.dungeon:find(dName)
         table.insert(keysList, {
             itemID = itemID,
@@ -1652,7 +1652,7 @@ function Frame:RenderKeys()
             dungeon = info.dungeon,
             source = info.source,
             note = info.note,
-            hasKey = DP:HasKey(itemID),
+            hasKey = RR:HasKey(itemID),
             isCurrent = isMatch,
         })
     end

@@ -1,8 +1,8 @@
-local addonName, DP = ...
-_G["DungeonPrep"] = DP
+local addonName, RR = ...
+_G["RunReady"] = RR
 
-DP.version = "1.0.0"
-DP.title = "|cffffd100Dungeon|r|cffffffffPrep|r"
+RR.version = "1.0.0"
+RR.title = "|cffffd100Dungeon|r|cffffffffPrep|r"
 
 -- Default Global Settings
 local defaultDB = {
@@ -21,7 +21,7 @@ local defaultCharDB = {
     customNotes = {},
 }
 
-DP.DungeonArt = {
+RR.DungeonArt = {
     ["RFC"]         = "Interface\\Glues\\LoadingScreens\\LoadScreenRagefireChasm",
     ["HOT"]         = "Interface\\AddOns\\ForeverDungeonJournal\\Media\\HallOfThanes.tga",
     ["WC"]          = "Interface\\Glues\\LoadingScreens\\LoadScreenWailingCaverns",
@@ -38,7 +38,7 @@ DP.DungeonArt = {
     ["SM_LIB"]      = "Interface\\AddOns\\ForeverDungeonJournal\\Media\\ScarletMonasteryLibraryHome.tga",
 }
 
-DP.DungeonArtCoords = {
+RR.DungeonArtCoords = {
     ["RFC"]         = { 0.02, 0.98, 0.34, 0.74 },
     ["HOT"]         = { 0.03, 0.97, 0.15, 0.85 },
     ["WC"]          = { 0.02, 0.98, 0.34, 0.74 },
@@ -55,87 +55,87 @@ DP.DungeonArtCoords = {
     ["SM_LIB"]      = { 0.00, 1.00, 0.15, 0.85 },
 }
 
-function DP:InitializeConfig()
-    if not DungeonPrepDB then
-        DungeonPrepDB = {}
+function RR:InitializeConfig()
+    if not RunReadyDB then
+        RunReadyDB = {}
     end
     for k, v in pairs(defaultDB) do
-        if DungeonPrepDB[k] == nil then
-            DungeonPrepDB[k] = v
+        if RunReadyDB[k] == nil then
+            RunReadyDB[k] = v
         end
     end
-    DP.db = DungeonPrepDB
+    RR.db = RunReadyDB
 
-    if not DungeonPrepCharDB then
-        DungeonPrepCharDB = {}
+    if not RunReadyCharDB then
+        RunReadyCharDB = {}
     end
     for k, v in pairs(defaultCharDB) do
-        if DungeonPrepCharDB[k] == nil then
-            DungeonPrepCharDB[k] = v
+        if RunReadyCharDB[k] == nil then
+            RunReadyCharDB[k] = v
         end
     end
-    DP.charDB = DungeonPrepCharDB
+    RR.charDB = RunReadyCharDB
 end
 
 -- Slash Commands
-SLASH_DUNGEONPREP1 = "/dp"
-SLASH_DUNGEONPREP2 = "/dungeonprep"
-SlashCmdList["DUNGEONPREP"] = function(msg)
+SLASH_RunReady1 = "/dp"
+SLASH_RunReady2 = "/RunReady"
+SlashCmdList["RunReady"] = function(msg)
     local cmd = string.trim((msg or ""):lower())
 
     if cmd == "help" then
-        print(DP.title .. " Commands:")
-        print("  |cffffd100/dp|r - Toggle DungeonPrep window")
+        print(RR.title .. " Commands:")
+        print("  |cffffd100/dp|r - Toggle RunReady window")
         print("  |cffffd100/dp check|r - Quick audit for your current zone/dungeon")
         print("  |cffffd100/dp share|r - Share active dungeon quests to party")
         print("  |cffffd100/dp minimap|r - Toggle minimap button")
     elseif cmd == "minimap" then
-        DP.db.showMinimapButton = not DP.db.showMinimapButton
-        if DP.MinimapButton then
-            if DP.db.showMinimapButton then DP.MinimapButton:Show() else DP.MinimapButton:Hide() end
+        RR.db.showMinimapButton = not RR.db.showMinimapButton
+        if RR.MinimapButton then
+            if RR.db.showMinimapButton then RR.MinimapButton:Show() else RR.MinimapButton:Hide() end
         end
-        print(DP.title .. ": Minimap button " .. (DP.db.showMinimapButton and "|cff00ff00shown|r" or "|cffff0000hidden|r"))
+        print(RR.title .. ": Minimap button " .. (RR.db.showMinimapButton and "|cff00ff00shown|r" or "|cffff0000hidden|r"))
     elseif cmd == "share" then
-        DP:ShareCurrentDungeonQuests()
+        RR:ShareCurrentDungeonQuests()
     elseif cmd == "check" then
-        DP:QuickAuditCurrentLocation()
+        RR:QuickAuditCurrentLocation()
     else
-        if DP.MainFrame then
-            if DP.MainFrame:IsShown() then
-                DP.MainFrame:Hide()
+        if RR.MainFrame then
+            if RR.MainFrame:IsShown() then
+                RR.MainFrame:Hide()
             else
-                DP.MainFrame:Show()
-                DP.MainFrame:Refresh()
+                RR.MainFrame:Show()
+                RR.MainFrame:Refresh()
             end
         end
     end
 end
 
-function DP:EnsureDungeonData()
-    if not DP.DungeonData or next(DP.DungeonData) == nil then
-        DP.DungeonData = {}
-        for k, v in pairs(DP.Dungeons_1_30 or {}) do DP.DungeonData[k] = v end
-        for k, v in pairs(DP.Dungeons_30_60 or {}) do DP.DungeonData[k] = v end
+function RR:EnsureDungeonData()
+    if not RR.DungeonData or next(RR.DungeonData) == nil then
+        RR.DungeonData = {}
+        for k, v in pairs(RR.Dungeons_1_30 or {}) do RR.DungeonData[k] = v end
+        for k, v in pairs(RR.Dungeons_30_60 or {}) do RR.DungeonData[k] = v end
     end
 end
 
-function DP:GetDungeon(key)
-    DP:EnsureDungeonData()
-    return DP.DungeonData and DP.DungeonData[key]
+function RR:GetDungeon(key)
+    RR:EnsureDungeonData()
+    return RR.DungeonData and RR.DungeonData[key]
 end
 
-function DP:GetDungeonList()
-    DP:EnsureDungeonData()
+function RR:GetDungeonList()
+    RR:EnsureDungeonData()
     local list = {}
-    local faction = DP.Utils:GetPlayerFaction()
+    local faction = RR.Utils:GetPlayerFaction()
     local playerLevel = UnitLevel("player")
 
-    for key, d in pairs(DP.DungeonData or {}) do
+    for key, d in pairs(RR.DungeonData or {}) do
         local include = true
-        if DP.db and DP.db.filterByFaction and (d.faction ~= "Both" and d.faction ~= faction) then
+        if RR.db and RR.db.filterByFaction and (d.faction ~= "Both" and d.faction ~= faction) then
             include = false
         end
-        if DP.db and DP.db.filterByLevel and playerLevel > 0 then
+        if RR.db and RR.db.filterByLevel and playerLevel > 0 then
             if playerLevel < (d.minLevel - 3) or playerLevel > (d.maxLevel + 10) then
                 include = false
             end
@@ -166,17 +166,17 @@ eventFrame:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         local name = ...
         if name == addonName then
-            DP:InitializeConfig()
-            if DP.MainFrame then DP.MainFrame:Initialize() end
-            if DP.MinimapButton then DP.MinimapButton:Initialize() end
+            RR:InitializeConfig()
+            if RR.MainFrame then RR.MainFrame:Initialize() end
+            if RR.MinimapButton then RR.MinimapButton:Initialize() end
         end
     elseif event == "PLAYER_ENTERING_WORLD" then
         C_Timer.After(1.5, function()
-            if DP.QuestScanner then DP.QuestScanner:RefreshCompletedQuests() end
+            if RR.QuestScanner then RR.QuestScanner:RefreshCompletedQuests() end
         end)
     elseif event == "QUEST_ACCEPTED" or event == "QUEST_TURNED_IN" or event == "QUEST_LOG_UPDATE" then
-        if DP.MainFrame and DP.MainFrame:IsShown() then
-            DP.MainFrame:SelectDungeon(DP.charDB.selectedDungeon or "SFK")
+        if RR.MainFrame and RR.MainFrame:IsShown() then
+            RR.MainFrame:SelectDungeon(RR.charDB.selectedDungeon or "SFK")
         end
     end
 end)

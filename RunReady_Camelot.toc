@@ -3,8 +3,8 @@
 ## Notes: 5-Man Dungeon Readiness, Pre-Flight Quest Audit, 1-Click Party Sharing, and In-Dungeon Item Alerts.
 ## Author: Antigravity Team
 ## Version: 1.0.0
-## SavedVariables: DungeonPrepDB
-## SavedVariablesPerCharacter: DungeonPrepCharDB
+## SavedVariables: RunReadyDB
+## SavedVariablesPerCharacter: RunReadyCharDB
 ## OptionalDeps: TomTom
 
 # Core Engine

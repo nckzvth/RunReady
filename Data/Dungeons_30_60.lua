@@ -1,11 +1,11 @@
-local addonName, DP = ...
+local addonName, RR = ...
 
 -- ==========================================================================
 -- DUNGEONS 30-60 DATABASE (WoW Forever Beta Verified + Classic)
 -- Data synchronized directly from ForeverDungeonJournal authoritative cache
 -- ==========================================================================
 
-DP.Dungeons_30_60 = {
+RR.Dungeons_30_60 = {
     ["DAL"] = {
         key = "DAL",
         name = 'City of Dalaran',
@@ -1350,10 +1350,10 @@ DP.Dungeons_30_60 = {
 }
 
 -- Populate master dungeon registry
-DP.DungeonData = DP.DungeonData or {}
-for k, v in pairs(DP.Dungeons_1_30 or {}) do
-    DP.DungeonData[k] = v
+RR.DungeonData = RR.DungeonData or {}
+for k, v in pairs(RR.Dungeons_1_30 or {}) do
+    RR.DungeonData[k] = v
 end
-for k, v in pairs(DP.Dungeons_30_60 or {}) do
-    DP.DungeonData[k] = v
+for k, v in pairs(RR.Dungeons_30_60 or {}) do
+    RR.DungeonData[k] = v
 end

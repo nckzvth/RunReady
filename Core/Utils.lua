@@ -1,9 +1,9 @@
-local addonName, DP = ...
+local addonName, RR = ...
 
-DP.Utils = {}
+RR.Utils = {}
 
 -- Reliable player faction
-function DP.Utils:GetPlayerFaction()
+function RR.Utils:GetPlayerFaction()
     local faction = UnitFactionGroup("player")
     if faction and faction ~= "" and faction ~= "Neutral" then
         return faction
@@ -22,18 +22,18 @@ function DP.Utils:GetPlayerFaction()
 end
 
 -- Add TomTom waypoint if available
-function DP.Utils:SetWaypoint(mapID, x, y, title)
+function RR.Utils:SetWaypoint(mapID, x, y, title)
     if not (mapID and x and y) then return false end
 
     -- 1. TomTom Support (Multiple Waypoints + Crazy Arrow)
     if TomTom then
         TomTom:AddWaypoint(mapID, x / 100, y / 100, {
-            title = DP.title .. ": " .. (title or "Quest Pickup"),
+            title = RR.title .. ": " .. (title or "Quest Pickup"),
             persistent = false,
             minimap = true,
             world = true,
         })
-        print(DP.title .. ": Waypoint added for " .. (title or "Target") .. string.format(" at %.1f, %.1f.", x, y))
+        print(RR.title .. ": Waypoint added for " .. (title or "Target") .. string.format(" at %.1f, %.1f.", x, y))
         return true
     end
 
@@ -42,11 +42,11 @@ function DP.Utils:SetWaypoint(mapID, x, y, title)
         local pt = UiMapPoint.CreateFromCoordinates(mapID, x / 100, y / 100)
         C_Map.SetUserWaypoint(pt)
         C_SuperTrack.SetSuperTrackedUserWaypoint(true)
-        print(DP.title .. ": Map Pin set for " .. (title or "Target") .. string.format(" at %.1f, %.1f.", x, y))
+        print(RR.title .. ": Map Pin set for " .. (title or "Target") .. string.format(" at %.1f, %.1f.", x, y))
         return true
     end
 
-    print(DP.title .. ": TomTom is not installed and native map pins failed.")
+    print(RR.title .. ": TomTom is not installed and native map pins failed.")
     return false
 end
 
@@ -102,7 +102,7 @@ local ZoneMapIDs = {
 ZoneMapIDs["Ashenvale"] = 1440 -- wait, 1434 is STV, 1440 is Ashenvale? Let's check map ids to be safe. Actually Ashenvale is 1440 in modern wow map UI?
 -- We can just do a dynamic lookup using C_Map if possible, but string matching C_Map.GetMapInfo is expensive.
 
-function DP.Utils:GetMapIDFromZone(zoneName)
+function RR.Utils:GetMapIDFromZone(zoneName)
     if not zoneName then return nil end
     -- Exact match from our manual table
     if ZoneMapIDs[zoneName] then return ZoneMapIDs[zoneName] end
@@ -118,7 +118,7 @@ function DP.Utils:GetMapIDFromZone(zoneName)
 end
 
 -- Native WoW Status Badges
-DP.StatusMeta = {
+RR.StatusMeta = {
     ["COMPLETED"] = {
         label = "Done",
         color = "10b981",
@@ -163,11 +163,11 @@ DP.StatusMeta = {
     },
 }
 
-function DP.Utils:GetStatusMeta(status)
-    return DP.StatusMeta[status] or DP.StatusMeta["AVAILABLE"]
+function RR.Utils:GetStatusMeta(status)
+    return RR.StatusMeta[status] or RR.StatusMeta["AVAILABLE"]
 end
 
-function DP.Utils:FormatTime(seconds)
+function RR.Utils:FormatTime(seconds)
     if not seconds or seconds <= 0 then return "0s" end
     local days = math.floor(seconds / 86400)
     local hours = math.floor((seconds % 86400) / 3600)
@@ -182,7 +182,7 @@ function DP.Utils:FormatTime(seconds)
 end
 
 local ejCache = {}
-function DP.Utils:GetDungeonEJTexture(dungeonName)
+function RR.Utils:GetDungeonEJTexture(dungeonName)
     if not dungeonName then return nil end
     if not ejCache.populated and EJ_GetInstanceByIndex then
         local foundAny = false

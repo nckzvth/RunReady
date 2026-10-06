@@ -1,4 +1,4 @@
-local addonName, DP = ...
+local addonName, RR = ...
 
 -- ==========================================================================
 -- DUNGEONS 1-30 DATABASE (WoW Forever Beta Verified)
@@ -6,7 +6,7 @@ local addonName, DP = ...
 -- 100% Verified Quest IDs, Prerequisites, Map Coordinates, and Reward Item IDs
 -- ==========================================================================
 
-DP.Dungeons_1_30 = {
+RR.Dungeons_1_30 = {
     ["RFC"] = {
         key = "RFC",
         name = 'Ragefire Chasm',

@@ -1,6 +1,6 @@
-local addonName, DP = ...
+local addonName, RR = ...
 
-DP.KeysData = {
+RR.KeysData = {
     [7146]  = { name = "Scarlet Key", dungeon = "Scarlet Monastery", source = "Doan's Strongbox (Library)", note = "Unlocks SM Armory and Cathedral doors" },
     [6893]  = { name = "Workshop Key", dungeon = "Gnomeregan", source = "Electrocutioner 6000", note = "Unlocks Gnomeregan back entrance workshop door" },
     [11000] = { name = "Shadowforge Key", dungeon = "Blackrock Depths", source = "Dark Iron Legacy Quest (Ghost)", note = "Unlocks internal gates, doors, and Shadowforge lock" },
@@ -14,7 +14,7 @@ DP.KeysData = {
 }
 
 -- Check if player has the key in bags or keyring
-function DP:HasKey(itemID)
+function RR:HasKey(itemID)
     if not itemID then return false end
 
     -- Check bags

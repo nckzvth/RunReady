@@ -3,8 +3,8 @@
 ## Notes: Visual dungeon quest tracker, readiness auditor, and party sync for Classic and WoW Forever.
 ## Author: Antigravity Team
 ## Version: 1.0.0
-## SavedVariables: DungeonPrepDB
-## SavedVariablesPerCharacter: DungeonPrepCharDB
+## SavedVariables: RunReadyDB
+## SavedVariablesPerCharacter: RunReadyCharDB
 ## OptionalDeps: TomTom
 
 # Core Engine

@@ -1,8 +1,8 @@
-﻿# DungeonPrep
+# RunReady
 
-**DungeonPrep** is a World of Warcraft Classic addon designed to bring modern convenience to classic dungeon running. It serves as a seamlessly integrated, natively-styled dungeon companion that helps you track quests, manage party syncs, and verify key attunements before you step foot in the instance.
+**RunReady** is a World of Warcraft Classic addon designed to bring modern convenience to classic dungeon running. It serves as a seamlessly integrated, natively-styled dungeon companion that helps you track quests, manage party syncs, and verify key attunements before you step foot in the instance.
 
-![DungeonPrep Showcase](https://via.placeholder.com/800x400.png?text=DungeonPrep+UI)
+![RunReady Showcase](https://via.placeholder.com/800x400.png?text=RunReady+UI)
 
 ## Features
 
@@ -17,14 +17,14 @@
 ## Installation
 
 1. Download the latest release from [CurseForge](#) or the [Releases page](#).
-2. Extract the DungeonPrep folder.
+2. Extract the RunReady folder.
 3. Place it in your World of Warcraft AddOns directory:
-   _classic_era_\Interface\AddOns\DungeonPrep
+   _classic_era_\Interface\AddOns\RunReady
 4. Log into the game and ensure the addon is enabled.
 
 ## Usage
 
-* Click the **DungeonPrep minimap button** to toggle the main UI.
+* Click the **RunReady minimap button** to toggle the main UI.
 * Use the **Left Sidebar** to filter by bracket (Beta/All) and select your target dungeon.
 * Navigate through the **Quests**, **Party Sync**, and **Keys & Locks** tabs to prepare for your run!
 

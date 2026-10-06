@@ -1,9 +1,9 @@
-local addonName, DP = ...
+local addonName, RR = ...
 
-DP.ItemWatcher = {}
+RR.ItemWatcher = {}
 
 -- Important in-dungeon quest items that players commonly miss looting
-DP.InDungeonQuestItems = {
+RR.InDungeonQuestItems = {
     -- Wailing Caverns
     [10441] = { name = "Glowing Shard", dungeon = "Wailing Caverns", boss = "Mutanus the Devourer", questID = 6981, note = "Starts quest: The Glowing Shard (Turn in at Ratchet / Spire)" },
     -- Deadmines
@@ -25,7 +25,7 @@ watcherFrame:RegisterEvent("LOOT_OPENED")
 watcherFrame:RegisterEvent("CHAT_MSG_LOOT")
 
 watcherFrame:SetScript("OnEvent", function(self, event, ...)
-    if not (DP.db and DP.db.autoAlertItemDrops) then return end
+    if not (RR.db and RR.db.autoAlertItemDrops) then return end
 
     if event == "LOOT_OPENED" then
         local numItems = GetNumLootItems() or 0
@@ -33,9 +33,9 @@ watcherFrame:SetScript("OnEvent", function(self, event, ...)
             local link = GetLootSlotLink(i)
             if link then
                 local itemID = tonumber(link:match("item:(%d+)"))
-                if itemID and DP.InDungeonQuestItems[itemID] then
-                    local info = DP.InDungeonQuestItems[itemID]
-                    DP.ItemWatcher:TriggerAlert(info.name, info.dungeon, info.note)
+                if itemID and RR.InDungeonQuestItems[itemID] then
+                    local info = RR.InDungeonQuestItems[itemID]
+                    RR.ItemWatcher:TriggerAlert(info.name, info.dungeon, info.note)
                 end
             end
         end
@@ -43,7 +43,7 @@ watcherFrame:SetScript("OnEvent", function(self, event, ...)
     elseif event == "CHAT_MSG_LOOT" then
         local message = ...
         if message then
-            for itemID, info in pairs(DP.InDungeonQuestItems) do
+            for itemID, info in pairs(RR.InDungeonQuestItems) do
                 if message:find(info.name) then
                     -- Someone looted or received the item
                     break
@@ -53,8 +53,8 @@ watcherFrame:SetScript("OnEvent", function(self, event, ...)
     end
 end)
 
-function DP.ItemWatcher:TriggerAlert(itemName, dungeonName, note)
+function RR.ItemWatcher:TriggerAlert(itemName, dungeonName, note)
     PlaySound(8959) -- Raid Warning / Quest Objective sound
-    RaidNotice_AddMessage(RaidWarningFrame, string.format("|cffffd100[DungeonPrep]|r Quest Item: |cff00e5ff%s|r!", itemName), ChatTypeInfo["RAID_WARNING"])
-    print(DP.title .. string.format(": |cffffaa00Loot Alert!|r |cff00e5ff%s|r dropped in %s! %s", itemName, dungeonName, note or ""))
+    RaidNotice_AddMessage(RaidWarningFrame, string.format("|cffffd100[RunReady]|r Quest Item: |cff00e5ff%s|r!", itemName), ChatTypeInfo["RAID_WARNING"])
+    print(RR.title .. string.format(": |cffffaa00Loot Alert!|r |cff00e5ff%s|r dropped in %s! %s", itemName, dungeonName, note or ""))
 end
