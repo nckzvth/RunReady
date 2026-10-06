@@ -18,7 +18,7 @@ function Btn:Initialize()
 
     -- Icon (Dungeon portal icon)
     self.icon = self:CreateTexture(nil, "BACKGROUND")
-    self.icon:SetSize(18, 18)
+    self.icon:SetSize(20, 20)
     self.icon:SetPoint("CENTER", 0, 1)
     self.icon:SetTexture("Interface\\AddOns\\RunReady\\UI\\MinimapIcon.tga")
 
