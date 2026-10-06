@@ -78,17 +78,17 @@ function RR:InitializeConfig()
 end
 
 -- Slash Commands
-SLASH_RunReady1 = "/dp"
+SLASH_RunReady1 = "/rr"
 SLASH_RunReady2 = "/RunReady"
 SlashCmdList["RunReady"] = function(msg)
     local cmd = string.trim((msg or ""):lower())
 
     if cmd == "help" then
         print(RR.title .. " Commands:")
-        print("  |cffffd100/dp|r - Toggle RunReady window")
-        print("  |cffffd100/dp check|r - Quick audit for your current zone/dungeon")
-        print("  |cffffd100/dp share|r - Share active dungeon quests to party")
-        print("  |cffffd100/dp minimap|r - Toggle minimap button")
+        print("  |cffffd100/rr|r - Toggle RunReady window")
+        print("  |cffffd100/rr check|r - Quick audit for your current zone/dungeon")
+        print("  |cffffd100/rr share|r - Share active dungeon quests to party")
+        print("  |cffffd100/rr minimap|r - Toggle minimap button")
     elseif cmd == "minimap" then
         RR.db.showMinimapButton = not RR.db.showMinimapButton
         if RR.MinimapButton then

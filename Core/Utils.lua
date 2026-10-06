@@ -216,8 +216,8 @@ function RR.Utils:GetDungeonEJTexture(dungeonName)
     return ejCache[dungeonName] or ejCache[cleanName]
 end
 
-SLASH_DPDEBUG1 = "/dpdebug"
-SlashCmdList["DPDEBUG"] = function()
+SLASH_RRDEBUG1 = "/rrdebug"
+SlashCmdList["RRDEBUG"] = function()
     local numTiers = EJ_GetNumTiers and EJ_GetNumTiers() or "nil"
     print("Num Tiers:", numTiers)
     
