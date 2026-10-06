@@ -1302,7 +1302,11 @@ function Frame:RenderQuestOverview()
 
         card:SetSize(cardWidth, cardHeight)
         card:SetPoint("TOPLEFT", 10, -((i - 1) * (cardHeight + 4)))
-        card.title:SetText(q.title)
+        if qEntry.isChain and qEntry.actualActiveTitle and qEntry.actualActiveTitle ~= q.title then
+            card.title:SetText(q.title .. " |cff999999(Lead-in: " .. qEntry.actualActiveTitle .. ")|r")
+        else
+            card.title:SetText(q.title)
+        end
         
         local pickupStr = q.pickupNPC or "Unknown"
         local locStr = q.pickupLocation or "Outside"
