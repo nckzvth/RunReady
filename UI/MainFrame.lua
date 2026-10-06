@@ -187,7 +187,7 @@ function Frame:Initialize()
 
     self.titleText = self:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
     self.titleText:SetPoint("RIGHT", self.shareBtn, "LEFT", -16, 0)
-    self.titleText:SetText("|cff00e5ffDungeon|r|cffffffffPrep|r  |cff64748bv" .. (RR.version or "1.0.0") .. "|r")
+    self.titleText:SetText("|cff00e5ffRun|r|cffffffffReady|r  |cff64748bv" .. (RR.version or "1.0.0") .. "|r")
 
     -- Screen Switcher Tabs will be attached to rightArea
 

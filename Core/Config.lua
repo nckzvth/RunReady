@@ -2,7 +2,7 @@ local addonName, RR = ...
 _G["RunReady"] = RR
 
 RR.version = "1.0.0"
-RR.title = "|cffffd100Dungeon|r|cffffffffPrep|r"
+RR.title = "|cffffd100Run|r|cffffffffReady|r"
 
 -- Default Global Settings
 local defaultDB = {
