@@ -285,8 +285,32 @@ function RR.QuestScanner:AuditDungeon(dungeonKey)
                 end
                 
                 if activeStep then
+                    -- Find the "capstone" or "dungeon" step (usually the one with rewards or the last IN-DUNGEON step)
+                    local capstoneStep = auditedChain.steps[#auditedChain.steps]
+                    for i = #auditedChain.steps, 1, -1 do
+                        if auditedChain.steps[i].data.phase == "IN-DUNGEON" then
+                            capstoneStep = auditedChain.steps[i]
+                            break
+                        end
+                    end
+                    
+                    -- Synthesize a hybrid data object that shows the capstone Title/Rewards
+                    -- but the current step's pickup/turnin/action logic!
+                    local hybridData = {}
+                    for k, v in pairs(activeStep.data) do
+                        hybridData[k] = v
+                    end
+                    
+                    -- Override visual elements with the capstone's data
+                    if capstoneStep.data.title then
+                        hybridData.title = capstoneStep.data.title
+                    end
+                    if capstoneStep.data.rewards then
+                        hybridData.rewards = capstoneStep.data.rewards
+                    end
+                    
                     table.insert(results.quests, {
-                        data = activeStep.data,
+                        data = hybridData,
                         status = activeStep.status,
                         statusNote = activeStep.statusNote,
                         isPushable = activeStep.isPushable,
@@ -294,7 +318,9 @@ function RR.QuestScanner:AuditDungeon(dungeonKey)
                         isChain = true,
                         chainName = auditedChain.name,
                         chainStep = activeStep.stepNumber,
-                        chainTotal = auditedChain.totalSteps
+                        chainTotal = auditedChain.totalSteps,
+                        actualActiveTitle = activeStep.data.title,
+                        capstoneTitle = capstoneStep.data.title,
                     })
                     results.totalCount = results.totalCount + 1
                     if activeStep.status == "COMPLETED" then results.completedCount = results.completedCount + 1
