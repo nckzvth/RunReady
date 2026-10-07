@@ -6,6 +6,51 @@ local addonName, RR = ...
 -- ==========================================================================
 
 RR.Dungeons_30_60 = {
+    ["TDC"] = {
+        name = "The Drowned City",
+        minLevel = 35,
+        maxLevel = 45,
+        recommendedLevel = 38,
+        zone = "Stranglethorn Vale",
+        faction = "Both",
+        quests = {}
+    },
+    ["KDS"] = {
+        name = "Krol'dok Stronghold",
+        minLevel = 40,
+        maxLevel = 50,
+        recommendedLevel = 42,
+        zone = "Riverglades",
+        faction = "Both",
+        quests = {}
+    },
+    ["ALP"] = {
+        name = "Alcaz Prison",
+        minLevel = 45,
+        maxLevel = 55,
+        recommendedLevel = 48,
+        zone = "Dustwallow Marsh",
+        faction = "Both",
+        quests = {}
+    },
+    ["BMH"] = {
+        name = "Blackmaw Hold",
+        minLevel = 50,
+        maxLevel = 60,
+        recommendedLevel = 52,
+        zone = "Azshara",
+        faction = "Both",
+        quests = {}
+    },
+    ["SHT"] = {
+        name = "Shaper's Terrace",
+        minLevel = 55,
+        maxLevel = 60,
+        recommendedLevel = 58,
+        zone = "Un'Goro Crater",
+        faction = "Both",
+        quests = {}
+    },
     ["DAL"] = {
         key = "DAL",
         name = 'City of Dalaran',
