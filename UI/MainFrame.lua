@@ -1288,6 +1288,7 @@ function Frame:RenderQuestOverview()
                             GameTooltip:SetHyperlink(self.itemLink)
                         else
                             GameTooltip:SetItemByID(self.itemID)
+                              if Item and Item.CreateFromItemID then local itm = Item:CreateFromItemID(self.itemID) if not itm:IsItemDataCached() then itm:ContinueOnItemLoad(function() if GameTooltip:GetOwner() == self then GameTooltip:SetItemByID(self.itemID) GameTooltip:Show() end end) end end
                         end
                         GameTooltip:Show()
                     end
@@ -1470,6 +1471,7 @@ function Frame:RenderChainDetail()
                             GameTooltip:SetHyperlink(self.itemLink)
                         else
                             GameTooltip:SetItemByID(self.itemID)
+                              if Item and Item.CreateFromItemID then local itm = Item:CreateFromItemID(self.itemID) if not itm:IsItemDataCached() then itm:ContinueOnItemLoad(function() if GameTooltip:GetOwner() == self then GameTooltip:SetItemByID(self.itemID) GameTooltip:Show() end end) end end
                         end
                         GameTooltip:Show()
                     end
