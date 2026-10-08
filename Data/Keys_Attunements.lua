@@ -1,31 +1,59 @@
 local addonName, RR = ...
 
 RR.KeysData = {
-    [7146]  = { name = "Scarlet Key", dungeon = "Scarlet Monastery", source = "Doan's Strongbox (Library)", note = "Unlocks SM Armory and Cathedral doors" },
-    [6893]  = { name = "Workshop Key", dungeon = "Gnomeregan", source = "Electrocutioner 6000", note = "Unlocks Gnomeregan back entrance workshop door" },
-    [11000] = { name = "Shadowforge Key", dungeon = "Blackrock Depths", source = "Dark Iron Legacy Quest (Ghost)", note = "Unlocks internal gates, doors, and Shadowforge lock" },
-    [13704] = { name = "Skeleton Key", dungeon = "Scholomance", source = "Scholomance Key Chain (Acolyte)", note = "Unlocks Scholomance viewing room and front gate" },
-    [12382] = { name = "Key to the City", dungeon = "Stratholme", source = "Magistrate Barthilas", note = "Unlocks Stratholme East/Service entrance" },
-    [18249] = { name = "Crescent Key", dungeon = "Dire Maul", source = "Pusillin (DM East)", note = "Unlocks Dire Maul West and North library doors" },
-    [12344] = { name = "Seal of Ascension", dungeon = "Upper Blackrock Spire", source = "LBRS Gem Quest", note = "Unlocks Upper Blackrock Spire door" },
-    -- Raid Attunements
-    [16309] = { name = "Drakefire Amulet", dungeon = "Onyxia's Lair", source = "Alliance Windsor Chain", note = "Required in bags to enter Onyxia's Lair" },
-    [16664] = { name = "Drakefire Amulet", dungeon = "Onyxia's Lair", source = "Horde Rexxar / Drakkisath Chain", note = "Required in bags to enter Onyxia's Lair" },
+    [7146]  = { 
+        name = "Scarlet Key", dungeon = "Scarlet Monastery", source = "Doan's Strongbox (Library)", note = "Unlocks SM Armory and Cathedral doors",
+        chain = {
+            name = "Scarlet Key",
+            faction = "Both",
+            steps = {
+                { step = 1, phase = "IN-DUNGEON", questID = 0, title = "Loot Doan's Strongbox", pickupNPC = "Doan's Strongbox", pickupLocation = "Scarlet Monastery (Library)", action = "Kill Arcanist Doan and loot the small box behind him." }
+            }
+        }
+    },
+    [6893]  = { 
+        name = "Workshop Key", dungeon = "Gnomeregan", source = "Electrocutioner 6000", note = "Unlocks Gnomeregan back entrance workshop door",
+        chain = {
+            name = "Workshop Key",
+            faction = "Both",
+            steps = {
+                { step = 1, phase = "IN-DUNGEON", questID = 0, title = "Defeat Electrocutioner 6000", pickupNPC = "Electrocutioner 6000", pickupLocation = "Gnomeregan", action = "Kill Electrocutioner 6000 and loot the key." }
+            }
+        }
+    },
+    [11000] = { 
+        name = "Shadowforge Key", dungeon = "Blackrock Depths", source = "Dark Iron Legacy Quest (Ghost)", note = "Unlocks internal gates, doors, and Shadowforge lock",
+        chain = {
+            name = "Dark Iron Legacy",
+            faction = "Both",
+            steps = {
+                { step = 1, phase = "PRE-DUNGEON", questID = 4296, title = "Dark Iron Legacy", pickupNPC = "Franclorn Forgewright", pickupLocation = "Blackrock Mountain", action = "Speak to Franclorn Forgewright while a ghost to receive the quest." },
+                { step = 2, phase = "IN-DUNGEON", questID = 4296, title = "Dark Iron Legacy", pickupNPC = "Fineous Darkvire", pickupLocation = "Blackrock Depths", action = "Kill Fineous Darkvire, loot Ironfel, and place it on the Shrine of Thaurissan." }
+            }
+        }
+    },
+    [999999] = { -- Placeholder ID for Dalaran Sewer Key
+        name = "Dalaran Sewer Key", dungeon = "City of Dalaran", source = "Heart of Disruption (Horde)", note = "Unlocks the Dalaran Sewers instance portal",
+        chain = {
+            name = "Dalaran Attunement",
+            faction = "Horde",
+            steps = {
+                { step = 1, phase = "PRE-DUNGEON", questID = 0, title = "Prison Break In", pickupNPC = "Magus Wordeen Voidglare", pickupLocation = "Tarren Mill", action = "Accept the initial attunement quest." },
+                { step = 2, phase = "PRE-DUNGEON", questID = 0, title = "Dalaran Patrols", pickupNPC = "Magus Wordeen Voidglare", pickupLocation = "Tarren Mill", action = "Follow up quest to patrol around Dalaran." },
+                { step = 3, phase = "PRE-DUNGEON", questID = 0, title = "Blood in the Streets", pickupNPC = "Image of Archmage Modera", pickupLocation = "Alterac Mountains", action = "Turn in to the Image of Modera." },
+                { step = 4, phase = "PRE-DUNGEON", questID = 0, title = "Heart of Disruption", pickupNPC = "Image of Archmage Modera", pickupLocation = "Alterac Mountains", action = "Complete the quest to receive the Dalaran Sewer Key." }
+            }
+        }
+    }
 }
 
--- Check if player has the key in bags or keyring
 function RR:HasKey(itemID)
     if not itemID then return false end
-
-    -- Check bags
     local count = GetItemCount(itemID, true) or 0
     if count > 0 then return true end
-
-    -- Check equipped (e.g. Seal of Ascension ring)
     for slot = 1, 19 do
         local id = GetInventoryItemID("player", slot)
         if id == itemID then return true end
     end
-
     return false
 end

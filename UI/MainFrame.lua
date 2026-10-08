@@ -1738,3 +1738,96 @@ function Frame:RenderKeys()
     end
     self.screenScroll:UpdateScrollChildRect()
 end
+
+function Frame:RenderKeyDetail()
+    local keyData = RR.KeysData[self.selectedKeyID]
+    if not keyData or not keyData.chain then return end
+
+    local targetChain = keyData.chain
+
+    if not self.backBtn then
+        self.backBtn = CreateFrame("Button", nil, self.screenContent, "UIPanelButtonTemplate")
+        self.backBtn:SetSize(120, 26)
+        self.backBtn:SetText("< Back to Quests")
+        self.backBtn:SetScript("OnClick", function()
+            Frame.selectedQuestID = nil
+            Frame.selectedKeyID = nil
+            Frame:RefreshActiveScreen()
+        end)
+    end
+    self.backBtn:ClearAllPoints()
+    self.backBtn:SetPoint("TOPLEFT", 10, -10)
+    self.backBtn:Show()
+    self.backBtn:SetText("< Back to Keys")
+
+    local currentY = -48
+    
+    if not self.detailTitle then
+        self.detailTitle = self.screenContent:CreateFontString(nil, "OVERLAY", "GameFontHighlightHuge")
+        self.detailTitle:SetPoint("TOPLEFT", 14, currentY)
+    end
+    self.detailTitle:Show()
+    self.detailTitle:SetText("|cffffd100" .. targetChain.name .. " Attunement|r")
+    
+    currentY = currentY - 32
+    local width = 880
+
+    for i, s in ipairs(targetChain.steps) do
+        local node = self:GetStepNode(i)
+        node:Show()
+
+        local stepMeta = RR.Utils:GetQuestStatusMeta(s.questID)
+        if s.questID == 0 then
+            stepMeta = { label = "Event", color = "f59e0b", r = 0.96, g = 0.62, b = 0.04 }
+        end
+        
+        node.statusBadge:SetText("|cff" .. stepMeta.color .. "[" .. stepMeta.label .. "]|r")
+        node.title:SetText(s.title or "Key Step")
+        
+        local who = s.pickupNPC
+        local where = s.pickupLocation
+        node:SetScript("OnEnter", function(selfRef)
+            GameTooltip:SetOwner(selfRef, "ANCHOR_TOPLEFT")
+            GameTooltip:AddLine(s.title or "Quest Step", 1, 1, 1)
+            GameTooltip:AddLine(string.format("Chain: %s (Step %d of %d)", targetChain.name, i, #targetChain.steps), 0.7, 0.8, 0.9)
+            GameTooltip:AddLine("Phase: " .. (s.phase or "QUEST"), 1, 0.8, 0.2)
+            GameTooltip:AddLine("Status: " .. stepMeta.label, stepMeta.r, stepMeta.g, stepMeta.b)
+            if s.action then GameTooltip:AddLine("Objective: " .. s.action, 1, 1, 1, true) end
+            GameTooltip:Show()
+        end)
+        node:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+        local phaseBadgeText = "|cff00e5ff[PRE-DUNGEON]|r"
+        if s.phase == "IN-DUNGEON" then
+            phaseBadgeText = "|cff3b82f6[IN-DUNGEON]|r"
+        elseif s.phase == "ITEM DROP" then
+            phaseBadgeText = "|cfff59e0b[ITEM DROP]|r"
+        end
+        node.phaseBadge:SetText(phaseBadgeText)
+        node.location:SetText(string.format("Contact: %s\nLocation: %s", who or "Unknown", where or "World"))
+
+        if s.phase == "ITEM DROP" then
+            node.questIcon:SetTexture("Interface\\Icons\\INV_Misc_Bag_10")
+        elseif s.phase == "IN-DUNGEON" then
+            node.questIcon:SetTexture("Interface\\Icons\\Spell_Frost_Stun")
+        else
+            node.questIcon:SetTexture("Interface\\Icons\\Quest_Available")
+        end
+
+        local actionText = s.action or "Progress questline"
+        node.actionText:SetText(actionText)
+
+        for j = 1, 4 do
+            if node.rewardIcons[j] then node.rewardIcons[j]:Hide() end
+        end
+        
+        local rh = node.title:GetStringHeight() + node.location:GetStringHeight() + node.actionText:GetStringHeight() + 32
+        rh = math.max(rh, 64)
+        node:SetSize(width, rh)
+        node:SetPoint("TOPLEFT", 10, currentY)
+        currentY = currentY - (rh + 4)
+    end
+
+    self.screenContent:SetHeight(math.abs(currentY) + 20)
+    self.screenScroll:UpdateScrollChildRect()
+end
