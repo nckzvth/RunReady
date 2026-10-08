@@ -1796,9 +1796,8 @@ function Frame:RenderKeyDetail()
             Frame:RefreshActiveScreen()
         end)
     end
-    self.backBtn:ClearAllPoints()
-    self.backBtn:SetPoint("TOPLEFT", 10, -10)
     self.backBtn:Show()
+    self.backBtn:SetPoint("TOPLEFT", self.screenContent, "TOPLEFT", 14, -6)
     self.backBtn:SetText("< Back to Keys")
 
     local currentY = -48
@@ -1814,61 +1813,127 @@ function Frame:RenderKeyDetail()
     local width = 880
 
     for i, s in ipairs(targetChain.steps) do
-        local node = self:GetStepNode(i)
-        node:Show()
+        local node = self.detailNodes[i]
+        if not node then
+            node = CreateFrame("Frame", nil, self.screenContent)
+            node:SetWidth(width)
+            
+            node.divider = node:CreateTexture(nil, "ARTWORK")
+            node.divider:SetPoint("TOPLEFT", 0, 0)
+            node.divider:SetPoint("TOPRIGHT", 0, 0)
+            node.divider:SetHeight(1)
+            node.divider:SetColorTexture(1, 1, 1, 0.05)
 
-        local stepMeta = { label = "Quest", color = "ffffff", r = 1, g = 1, b = 1 }
-        if s.questID == 0 then
-            stepMeta = { label = "Event", color = "f59e0b", r = 0.96, g = 0.62, b = 0.04 }
+            node.title = node:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge")
+            node.title:SetPoint("TOPLEFT", 12, -16)
+            node.title:SetTextColor(1, 0.82, 0)
+            
+            node.reqs = node:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+            node.reqs:SetPoint("TOPLEFT", node.title, "BOTTOMLEFT", 0, -4)
+            
+            node.icon = node:CreateTexture(nil, "ARTWORK")
+            node.icon:SetSize(24, 24)
+            node.icon:SetPoint("TOPRIGHT", -12, -16)
+            
+            node.objLbl = node:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            node.objLbl:SetPoint("TOPLEFT", 12, -50)
+            node.objLbl:SetText("Objective")
+            
+            node.objText = node:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+            node.objText:SetPoint("TOPLEFT", node.objLbl, "BOTTOMLEFT", 0, -4)
+            node.objText:SetWidth(600)
+            node.objText:SetJustifyH("LEFT")
+            
+            node.startLbl = node:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+            node.startLbl:SetPoint("TOPLEFT", 12, -100)
+            node.startLbl:SetText("Starts at")
+            
+            node.startText = node:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+            node.startText:SetPoint("TOPLEFT", node.startLbl, "BOTTOMLEFT", 0, -4)
+
+            node.rewardIcons = {}
+            for j = 1, 4 do
+                local riBtn = CreateFrame("Button", nil, node)
+                riBtn:SetSize(28, 28)
+                riBtn:SetPoint("TOPLEFT", node.startText, "BOTTOMLEFT", (j-1)*32, -8)
+                riBtn:Hide()
+                
+                riBtn.icon = riBtn:CreateTexture(nil, "ARTWORK")
+                riBtn.icon:SetAllPoints()
+                
+                riBtn:SetScript("OnEnter", function(selfRef)
+                    if selfRef.itemLink or selfRef.itemID then
+                        GameTooltip:SetOwner(selfRef, "ANCHOR_RIGHT")
+                        if selfRef.itemLink then
+                            GameTooltip:SetHyperlink(selfRef.itemLink)
+                        else
+                            GameTooltip:SetItemByID(selfRef.itemID)
+                            if Item and Item.CreateFromItemID then local itm = Item:CreateFromItemID(selfRef.itemID) if not itm:IsItemDataCached() then itm:ContinueOnItemLoad(function() if GameTooltip:GetOwner() == selfRef then GameTooltip:SetItemByID(selfRef.itemID) GameTooltip:Show() end end) end end
+                        end
+                        GameTooltip:Show()
+                    end
+                end)
+                riBtn:SetScript("OnLeave", function() GameTooltip:Hide() end)
+                
+                node.rewardIcons[j] = riBtn
+            end
+
+            self.detailNodes[i] = node
         end
-        
-        node.statusBadge:SetText("|cff" .. stepMeta.color .. "[" .. stepMeta.label .. "]|r")
+
+        node:SetPoint("TOPLEFT", 14, currentY)
         node.title:SetText(s.title or "Key Step")
         
-        local who = s.pickupNPC
-        local where = s.pickupLocation
-        node:SetScript("OnEnter", function(selfRef)
-            GameTooltip:SetOwner(selfRef, "ANCHOR_TOPLEFT")
-            GameTooltip:AddLine(s.title or "Quest Step", 1, 1, 1)
-            GameTooltip:AddLine(string.format("Chain: %s (Step %d of %d)", targetChain.name, i, #targetChain.steps), 0.7, 0.8, 0.9)
-            GameTooltip:AddLine("Phase: " .. (s.phase or "QUEST"), 1, 0.8, 0.2)
-            GameTooltip:AddLine("Status: " .. stepMeta.label, stepMeta.r, stepMeta.g, stepMeta.b)
-            if s.action then GameTooltip:AddLine("Objective: " .. s.action, 1, 1, 1, true) end
-            GameTooltip:Show()
-        end)
-        node:SetScript("OnLeave", function() GameTooltip:Hide() end)
-
         local phaseBadgeText = "|cff00e5ff[PRE-DUNGEON]|r"
         if s.phase == "IN-DUNGEON" then
             phaseBadgeText = "|cff3b82f6[IN-DUNGEON]|r"
         elseif s.phase == "ITEM DROP" then
             phaseBadgeText = "|cfff59e0b[ITEM DROP]|r"
         end
-        node.phaseBadge:SetText(phaseBadgeText)
-        node.location:SetText(string.format("Contact: %s\nLocation: %s", who or "Unknown", where or "World"))
+        node.reqs:SetText(phaseBadgeText)
 
-        if s.phase == "ITEM DROP" then
-            node.questIcon:SetTexture("Interface\\Icons\\INV_Misc_Bag_10")
-        elseif s.phase == "IN-DUNGEON" then
-            node.questIcon:SetTexture("Interface\\Icons\\Spell_Frost_Stun")
+        if s.questID == 0 then
+            node.icon:SetTexture("Interface\\Icons\\INV_Misc_Note_01")
         else
-            node.questIcon:SetTexture("Interface\\Icons\\Quest_Available")
-        end
-
-        local actionText = s.action or "Progress questline"
-        node.actionText:SetText(actionText)
-
-        for j = 1, 4 do
-            if node.rewardIcons[j] then node.rewardIcons[j]:Hide() end
+            node.icon:SetTexture("Interface\\GossipFrame\\ActiveQuestIcon")
         end
         
-        local rh = node.title:GetStringHeight() + node.location:GetStringHeight() + node.actionText:GetStringHeight() + 32
-        rh = math.max(rh, 64)
-        node:SetSize(width, rh)
-        node:SetPoint("TOPLEFT", 10, currentY)
-        currentY = currentY - (rh + 4)
+        node.objText:SetText(s.action or "")
+        
+        local pickupStr = s.pickupNPC or "Unknown"
+        local locStr = s.pickupLocation or "Outside"
+        node.startText:SetText(pickupStr .. " (" .. locStr .. ")")
+        
+        local nodeHeight = 130
+        for j = 1, 4 do node.rewardIcons[j]:Hide() end
+        if s.rewards and #s.rewards > 0 then
+            nodeHeight = 160
+            for j, r in ipairs(s.rewards) do
+                if j <= 4 then
+                    local riBtn = node.rewardIcons[j]
+                    riBtn:Show()
+                    riBtn.itemID = r.itemID
+                    riBtn.itemLink = r.itemLink
+                    riBtn.icon:SetTexture("Interface\\Icons\\INV_Box_01")
+                    if r.icon then
+                        riBtn.icon:SetTexture(r.icon)
+                    elseif C_Item and C_Item.GetItemIconByID then
+                        riBtn.icon:SetTexture(C_Item.GetItemIconByID(r.itemID))
+                    elseif GetItemIcon then
+                        riBtn.icon:SetTexture(GetItemIcon(r.itemID))
+                    end
+                end
+            end
+        end
+
+        node:Show()
+        currentY = currentY - nodeHeight
     end
 
+    for i = #targetChain.steps + 1, #self.detailNodes do
+        if self.detailNodes[i] then self.detailNodes[i]:Hide() end
+    end
+    
     self.screenContent:SetHeight(math.abs(currentY) + 20)
     self.screenScroll:UpdateScrollChildRect()
 end
