@@ -1817,7 +1817,7 @@ function Frame:RenderKeyDetail()
         local node = self:GetStepNode(i)
         node:Show()
 
-        local stepMeta = RR.Utils:GetQuestStatusMeta(s.questID)
+        local stepMeta = { label = "Quest", color = "ffffff", r = 1, g = 1, b = 1 }
         if s.questID == 0 then
             stepMeta = { label = "Event", color = "f59e0b", r = 0.96, g = 0.62, b = 0.04 }
         end
