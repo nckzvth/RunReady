@@ -1397,16 +1397,16 @@ function Frame:RenderChainDetail()
     if not self.backBtn then
         self.backBtn = CreateFrame("Button", nil, self.screenContent, "UIPanelButtonTemplate")
         self.backBtn:SetSize(120, 26)
-        self.backBtn:SetText("< Back to Quests")
         self.backBtn:SetScript("OnClick", function()
             Frame.selectedQuestID = nil
+            Frame.selectedKeyID = nil
             Frame:RefreshActiveScreen()
         end)
     end
-    self.backBtn:Show()
+    self.backBtn:SetText("< Back to Quests")
+    self.backBtn:ClearAllPoints()
     self.backBtn:SetPoint("TOPLEFT", self.screenContent, "TOPLEFT", 14, -6)
-
-    local currentY = -48
+    self.backBtn:Show()
     
     if not self.detailTitle then
         self.detailTitle = self.screenContent:CreateFontString(nil, "OVERLAY", "GameFontHighlightHuge")
@@ -1799,10 +1799,10 @@ function Frame:RenderKeyDetail()
             Frame:RefreshActiveScreen()
         end)
     end
-    self.backBtn:SetText("< Back to Quests")
-    self.backBtn:Show()
-    self.backBtn:SetPoint("TOPLEFT", self.screenContent, "TOPLEFT", 14, -6)
     self.backBtn:SetText("< Back to Keys")
+    self.backBtn:ClearAllPoints()
+    self.backBtn:SetPoint("TOPLEFT", self.screenContent, "TOPLEFT", 14, -6)
+    self.backBtn:Show()
 
     local currentY = -48
     
