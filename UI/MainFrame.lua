@@ -1793,13 +1793,13 @@ function Frame:RenderKeyDetail()
     if not self.backBtn then
         self.backBtn = CreateFrame("Button", nil, self.screenContent, "UIPanelButtonTemplate")
         self.backBtn:SetSize(120, 26)
-        self.backBtn:SetText("< Back to Quests")
         self.backBtn:SetScript("OnClick", function()
             Frame.selectedQuestID = nil
             Frame.selectedKeyID = nil
             Frame:RefreshActiveScreen()
         end)
     end
+    self.backBtn:SetText("< Back to Quests")
     self.backBtn:Show()
     self.backBtn:SetPoint("TOPLEFT", self.screenContent, "TOPLEFT", 14, -6)
     self.backBtn:SetText("< Back to Keys")
@@ -1816,6 +1816,7 @@ function Frame:RenderKeyDetail()
     currentY = currentY - 32
     local width = 880
 
+    if not self.detailNodes then self.detailNodes = {} end
     for i, s in ipairs(targetChain.steps) do
         local node = self.detailNodes[i]
         if not node then
