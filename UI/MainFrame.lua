@@ -1514,6 +1514,8 @@ function Frame:RenderChainDetail()
             self.detailNodes[i] = node
         end
 
+        if node.secHeader then node.secHeader:Hide() end
+
         node:SetPoint("TOPLEFT", 14, currentY)
         node.title:SetText(q.title)
         
