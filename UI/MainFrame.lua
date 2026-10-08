@@ -801,7 +801,11 @@ function Frame:RefreshActiveScreen()
     elseif self.activeScreen == "PARTY" then
         self:RenderPartySync()
     elseif self.activeScreen == "KEYS" then
-        self:RenderKeys()
+        if self.selectedKeyID then
+            self:RenderKeyDetail()
+        else
+            self:RenderKeys()
+        end
     end
 end
 
@@ -1768,7 +1772,7 @@ function Frame:RenderKeys()
         
         card:SetScript("OnClick", function()
             Frame.selectedKeyID = k.itemID
-            Frame:RenderKeyDetail()
+            Frame:RefreshActiveScreen()
         end)
 
         card:Show()
