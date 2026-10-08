@@ -1957,8 +1957,9 @@ function Frame:RenderKeyDetail()
             end
         end
 
+        node:SetHeight(nodeHeight)
         node:Show()
-        currentY = currentY - nodeHeight
+        currentY = currentY - nodeHeight - 16
     end
 
     for i = #targetChain.steps + 1, #self.detailNodes do
