@@ -1408,6 +1408,8 @@ function Frame:RenderChainDetail()
     self.backBtn:SetPoint("TOPLEFT", self.screenContent, "TOPLEFT", 14, -6)
     self.backBtn:Show()
     
+    local currentY = -48
+    
     if not self.detailTitle then
         self.detailTitle = self.screenContent:CreateFontString(nil, "OVERLAY", "GameFontHighlightHuge")
         self.detailTitle:SetPoint("TOPLEFT", 14, currentY)
