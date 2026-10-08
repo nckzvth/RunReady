@@ -32,7 +32,7 @@ RR.KeysData = {
             }
         }
     },
-    [999999] = { -- Placeholder ID for Dalaran Sewer Key
+    [277507] = { -- Placeholder ID for Dalaran Sewer Key
         name = "Dalaran Sewer Key", dungeon = "City of Dalaran", source = "Heart of Disruption (Horde)", note = "Unlocks the Dalaran Sewers instance portal",
         chain = {
             name = "Dalaran Attunement",
