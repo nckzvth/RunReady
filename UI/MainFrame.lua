@@ -1921,6 +1921,9 @@ function Frame:RenderKeyDetail()
         elseif s.phase == "ITEM DROP" then
             phaseBadgeText = "|cfff59e0b[ITEM DROP]|r"
         end
+        if s.preReqs then
+            phaseBadgeText = phaseBadgeText .. "   |cff94a3b8" .. s.preReqs .. "|r"
+        end
         node.reqs:SetText(phaseBadgeText)
 
         if s.questID == 0 then
